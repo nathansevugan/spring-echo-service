@@ -6,9 +6,9 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan("com.echo")
-public class SpringbootEchoServiceApplication {
+public class SpringBootEchoServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringbootEchoServiceApplication.class, args);
+		SpringApplication.run(SpringBootEchoServiceApplication.class, args);
 	}
 }
