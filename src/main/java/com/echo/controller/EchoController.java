@@ -13,6 +13,6 @@ public class EchoController {
     @PostMapping("/echo")
     @ResponseBody
     public EchoMessage echo(@RequestParam(value="message", defaultValue="hello world") String message) {
-        return new EchoMessage(message);
+        return new EchoMessage("Response from server: " + message);
     }
 }
