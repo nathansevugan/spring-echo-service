@@ -30,7 +30,7 @@ objects:
   metadata:
     name: codecentric-springboot
   spec:
-    tags:
+#    tags:
 #    - annotations:
 #        supports: java
 #        tags: java
