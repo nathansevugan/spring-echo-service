@@ -5,25 +5,26 @@ pipeline {
   stages {
     stage('Build App') {
       steps {
+        echo "building application"
         sh "mvn install"
       }
     }
-    stage('Create Image Builder') {
-      when {
-        expression {
-          openshift.withCluster() {
-            return !openshift.selector("bc", "mapit").exists();
-          }
-        }
-      }
-      steps {
-        script {
-          openshift.withCluster() {
-            echo "building source"
-//            openshift.newBuild("--name=mapit", "--image-stream=redhat-openjdk18-openshift:1.1", "--binary")
-          }
-        }
-      }
+//    stage('Create Image Builder') {
+//      when {
+//        expression {
+//          openshift.withCluster() {
+//            return !openshift.selector("bc", "mapit").exists();
+//          }
+//        }
+//      }
+//      steps {
+//        script {
+//          openshift.withCluster() {
+//            echo "creating image builder"
+////            openshift.newBuild("--name=mapit", "--image-stream=redhat-openjdk18-openshift:1.1", "--binary")
+//          }
+//        }
+//      }
     }
 //    stage('Build Image') {
 //      steps {
