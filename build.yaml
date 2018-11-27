@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: jenkins-pipeline
+parameters:
+- name: APP_NAME
+  displayName: Application Name
+  required: true
+  value: spring-echo-service
+- name: GIT_URL
+  displayName: Source URL
+  required: true
+  value: https://github.com/nathansevugan/springboot-echo-service.git
+- name: GIT_REF
+  displayName: Source Ref
+  required: true
+  value: master
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec: {}
+  status:
+    dockerImageRepository: ""
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: codecentric-springboot
+  spec:
+    tags:
+#    - annotations:
+#        supports: java
+#        tags: java
+#        version: "1.8.0"
+      from:
+        kind: DockerImage
+        name: codecentric/springboot-maven3-centos:latest
+#      name: "1.4.0"
+#    - annotations:
+#        supports: java
+#        tags: builder,java
+#      from:
+#        kind:
+#        name: "1.4.0"
+      name: latest
+- kind: "BuildConfig"
+  apiVersion: "v1"
+  metadata:
+    name: ${APP_NAME}
+  spec:
+    source:
+      contextDir: ./
+      git:
+        uri: ${GIT_SOURCE_URL}
+        ref: master
+      sourceSecret:
+        name: ${GIT_SOURCE_SECRET}
+      type: Git
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfilePath: openshift/maven-pipeline.groovy
+        env:
+        - name: "APP_NAME"
+          value: ${APP_NAME}
+        - name: "GIT_REF"
+          value: ${GIT_REF}
+        - name: "GIT_URL"
+          value: ${GIT_URL}
+    triggers:
+    - type: "Generic"
+      generic:
+        allowEnv: true
+        secret: ""
+#- apiVersion: "v1"
+#  kind: "BuildConfig"
+#  metadata:
+#    name: ${APP_NAME}-run
+#  spec:
+#    source:
+#      dockerfile: |-
+#        FROM codecentric-springboot
+#        COPY springboot-echo-service.jar /deployments/spring-boot-sample.jar
+#        EXPOSE 5000
+#      binary:
+#        asFile: spring-boot-sample.jar
+#      type: Docker
+#    strategy:
+#      dockerStrategy:
+#        from:
+#          kind: ImageStreamTag
+#          name: spring-boot-base:latest
+#      type: Docker
+#    output:
+#      to:
+#        kind: ImageStreamTag
+#        name: ${APP_NAME}:latest
+#    triggers: []
