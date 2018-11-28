@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: springboot-echo-service
+  name: springboot-echo-service
+  namespace: dev
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: springboot-echo-service:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      uri: https://github.com/nathansevugan/springboot-echo-service.git
+    type: Git
+  strategy:
+    sourceStrategy:
+      env:
+      - name: APP_TARGET
+        value: springboot-echo-service/target
+      from:
+        kind: ImageStreamTag
+        name: springboot-maven3-centos:latest
+    type: Source
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - type: ConfigChange
+  - imageChange:
+      lastTriggeredImageID: codecentric/springboot-maven3-centos@sha256:91ecee201c42cfde8616dfe7b5c77c4f6100f95f50c6e8ffe16a78c99dde59bf
+    type: ImageChange

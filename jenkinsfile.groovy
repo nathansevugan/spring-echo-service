@@ -1,6 +1,12 @@
 pipeline {
   agent {
-      label 'maven'
+     node {
+       label 'maven'
+     }
+  }
+  options {
+    // set a timeout of 20 minutes for this pipeline
+    timeout(time: 2, unit: 'MINUTES')
   }
   stages {
     stage('Build App') {
@@ -9,6 +15,7 @@ pipeline {
         sh "mvn install"
       }
     }
+  }
 //    stage('Create Image Builder') {
 //      when {
 //        expression {
@@ -85,5 +92,5 @@ pipeline {
 //        }
 //      }
 //    }
-  }
-}
+//  }
+//}

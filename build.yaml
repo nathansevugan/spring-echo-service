@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: jenkins-pipeline
+  name: springboot-echo-service
 parameters:
 - name: APP_NAME
   displayName: Application Name
   required: true
-  value: spring-echo-service
+  value: springboot-echo-service
 - name: GIT_URL
   displayName: Source URL
   required: true
@@ -46,55 +46,38 @@ objects:
 #        kind:
 #        name: "1.4.0"
       name: latest
-- kind: "BuildConfig"
-  apiVersion: "v1"
+- apiVersion: v1
+  kind: BuildConfig
   metadata:
-    name: ${APP_NAME}
+    labels:
+      app: springboot-echo-service
+    name: springboot-echo-service
   spec:
+    failedBuildsHistoryLimit: 5
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: springboot-echo-service:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
     source:
-      contextDir: ./
       git:
-        uri: ${GIT_SOURCE_URL}
-        ref: master
-      sourceSecret:
-        name: ${GIT_SOURCE_SECRET}
-      type: Git
+        uri: https://github.com/nathansevugan/springboot-echo-service.git
     strategy:
       jenkinsPipelineStrategy:
-        jenkinsfilePath: openshift/maven-pipeline.groovy
+        jenkinsfilePath: ./jenkinsfile.groovy
         env:
-        - name: "APP_NAME"
-          value: ${APP_NAME}
-        - name: "GIT_REF"
-          value: ${GIT_REF}
-        - name: "GIT_URL"
-          value: ${GIT_URL}
-    triggers:
-    - type: "Generic"
-      generic:
-        allowEnv: true
-        secret: ""
-#- apiVersion: "v1"
-#  kind: "BuildConfig"
-#  metadata:
-#    name: ${APP_NAME}-run
-#  spec:
-#    source:
-#      dockerfile: |-
-#        FROM codecentric-springboot
-#        COPY springboot-echo-service.jar /deployments/spring-boot-sample.jar
-#        EXPOSE 5000
-#      binary:
-#        asFile: spring-boot-sample.jar
-#      type: Docker
-#    strategy:
-#      dockerStrategy:
-#        from:
-#          kind: ImageStreamTag
-#          name: spring-boot-base:latest
-#      type: Docker
-#    output:
-#      to:
-#        kind: ImageStreamTag
-#        name: ${APP_NAME}:latest
-#    triggers: []
+          - name: "APP_NAME"
+            value: ${APP_NAME}
+          - name: "GIT_REF"
+            value: ${GIT_SOURCE_REF}
+          - name: "GIT_REPOSITORY"
+            value: ${GIT_SOURCE_URL}
+          - name: "GIT_CREDENTIALS"
+            value: ${GIT_SOURCE_SECRET}
+      successfulBuildsHistoryLimit: 5
+      triggers:
+        type: ImageChange
+
