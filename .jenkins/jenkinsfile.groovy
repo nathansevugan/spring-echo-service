@@ -65,10 +65,12 @@ pipeline {
             steps {
                 echo "building application"
                 sh "mvn install"
+                stash name:"jar", includes:"target/springboot-echo-service.jar"
             }
         }
         stage('Build image') {
             steps {
+                unstash name:"jar"
                 script {
 //                    createImageBuild(rcImageName, buildNumber)
                     runImageBuild(rcImageName)
