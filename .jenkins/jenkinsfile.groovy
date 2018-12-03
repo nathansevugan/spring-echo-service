@@ -3,7 +3,9 @@ package pipelines
 
 pipeline {
     agent {
-        node { label 'springboot-echo-service-build' }
+//        node { label 'springboot-echo-service-build' }
+        node { label 'maven' }
+
     }
 
     environment {
