@@ -81,7 +81,7 @@ objects:
     source:
       dockerfile: |-
         FROM codecentric/springboot-maven3-centos
-        COPY springboot-echo-service.jar ./target/springboot-echo-service.jar
+        COPY springboot-echo-service.jar ./target/springboot-echo-service-0.0.1-SNAPSHOT.jar
         EXPOSE 8080
       binary:
         asFile: springboot-echo-service.jar
