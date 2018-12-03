@@ -8,9 +8,9 @@ pipeline {
 
     }
 
-    environment {
-        JAVA_HOME = "/usr/lib/jdk10/jdk-1.8.0"
-    }
+//    environment {
+//        JAVA_HOME = "/usr/lib/jdk10/jdk-1.8.0"
+//    }
     options {
         // set a timeout of 20 minutes for this pipeline
         timeout(time: 2, unit: 'MINUTES')
