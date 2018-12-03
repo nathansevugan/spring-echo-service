@@ -58,12 +58,10 @@ pipeline {
             }
         }
 
-        stages {
-            stage('Build App') {
-                steps {
-                    echo "building application"
-                    sh "mvn install"
-                }
+        stage('Build App') {
+            steps {
+                echo "building application"
+                sh "mvn install"
             }
         }
         stage('Build image') {
