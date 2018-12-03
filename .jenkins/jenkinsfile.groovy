@@ -65,7 +65,7 @@ pipeline {
             steps {
                 echo "building application"
                 sh "mvn install"
-                stash name:"jar", includes:"target/springboot-echo-service.jar"
+                stash name:"jar", includes:"target/springboot-echo-service-0.0.1-SNAPSHOT.jar"
             }
         }
         stage('Build image') {
