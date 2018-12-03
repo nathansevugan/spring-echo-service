@@ -36,7 +36,7 @@ pipeline {
 //                    imageSuffix = muleVersion //branch
 
                     baseImageName = ("springboot-echo-service").toLowerCase()
-                    rcImageName = "${baseImageName} "
+                    rcImageName = "${baseImageName}"
                             //-rc-${shortCommit}-${buildNumber}
 
 
