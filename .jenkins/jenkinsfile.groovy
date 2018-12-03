@@ -3,7 +3,7 @@ package pipelines
 
 pipeline {
     agent {
-        node { label 'jenkins-build-pipeline' }
+        node { label 'springboot-echo-service-build' }
     }
 
     environment {

@@ -52,7 +52,7 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: ${APP_NAME}
+    name: ${APP_NAME}-build
   spec:
     source:
       git:
