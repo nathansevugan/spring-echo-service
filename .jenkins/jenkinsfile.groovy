@@ -87,7 +87,10 @@ def runImageBuild(def imageName) {
 
 def ocStartSession() {
     println("Requesting OC session")
-    def sessionToken = sh script: "set +x; oc sa get-token nate -n cicd", returnStdout: true
+//    def sessionToken = sh script: "set +x; oc sa get-token nate -n cicd", returnStdout: true
+    echo ("getting session token")
+    def sessionToken = sh script: "set +x; oc sa get-token robot -n dev", returnStdout: true
+    echo ("attempting to login to the service using the session token: " + sessionToken)
     sh script: "set +x; oc login kubernetes.default.svc --insecure-skip-tls-verify --token=$sessionToken"
     return sessionToken
 }
