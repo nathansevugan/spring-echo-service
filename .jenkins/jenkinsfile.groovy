@@ -42,9 +42,9 @@ pipeline {
                     echo("building base image:" + baseImageName)
 
                     echo "ENV"
-                    environment = env.getEnvironment()
+//                    environment = env.getEnvironment()
 //                            .collect { envvar -> "${envvar.key}=${envvar.value}" }.join("\n")
-                    echo environment
+//                    echo environment
 
                 }
             }
