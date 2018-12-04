@@ -71,8 +71,8 @@ pipeline {
         stage('Build image') {
             steps {
                 unstash name:"jar"
-                sh "ls"
-                sh "oc start-build ${appName}-image -n ${projectId}"
+                sh "ls target"
+                sh "oc start-build bc/${imageName}-image -n ${projectId} --wait --follow"
 //                sh script: "oc start-build bc/${imageName}-image --wait --follow"
 //                script {
 //                    createImageBuild(rcImageName, buildNumber)
