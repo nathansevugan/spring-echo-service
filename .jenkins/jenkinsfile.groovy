@@ -37,7 +37,7 @@ pipeline {
 
                     baseImageName = ("springboot-echo-service").toLowerCase()
                     rcImageName = "${baseImageName}"
-                            //-rc-${shortCommit}-${buildNumber}
+                    //-rc-${shortCommit}-${buildNumber}
 
 
                     echo("building base image:" + baseImageName)
@@ -65,14 +65,16 @@ pipeline {
             steps {
                 echo "building application"
                 sh "mvn install"
-                stash name:"jar", includes:"target/springboot-echo-service-0.0.1-SNAPSHOT.jar"
+                stash name: "jar", includes: "target/springboot-echo-service-0.0.1-SNAPSHOT.jar"
             }
         }
         stage('Build image') {
             steps {
-                unstash name:"jar"
+                unstash name: "jar"
                 sh "ls target"
-                sh "oc start-build bc/${imageName}-image -n ${projectId} --wait --follow"
+                script {
+                    sh "oc start-build bc/${imageName}-image -n ${projectId} --wait --follow"
+                }
 //                sh script: "oc start-build bc/${imageName}-image --wait --follow"
 //                script {
 //                    createImageBuild(rcImageName, buildNumber)
@@ -94,9 +96,9 @@ def runImageBuild(def imageName) {
 def ocStartSession() {
     println("Requesting OC session")
 //    def sessionToken = sh script: "set +x; oc sa get-token nate -n cicd", returnStdout: true
-    echo ("getting session token")
+    echo("getting session token")
     def sessionToken = sh script: "set +x; oc sa get-token robot -n dev", returnStdout: true
-    echo ("attempting to login to the service using the session token: " + sessionToken)
+    echo("attempting to login to the service using the session token: " + sessionToken)
     sh script: "set +x; oc login kubernetes.default.svc --insecure-skip-tls-verify --token=$sessionToken"
     return sessionToken
 }
