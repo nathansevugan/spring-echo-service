@@ -32,22 +32,20 @@ objects:
   metadata:
     labels:
       app: springboot-echo-service
-    name: springboot-maven3-centos
+    name: springboot-base-image
     namespace: dev
   spec:
     lookupPolicy:
       local: false
     tags:
     - annotations:
-        openshift.io/imported-from: codecentric/springboot-maven3-centos
+        supports: java
+        tags: java
+        version: "1.8.0"
       from:
         kind: DockerImage
-        name: codecentric/springboot-maven3-centos
-      generation: 2
-      importPolicy: {}
+        name: fabric8/java-jboss-openjdk8-jdk
       name: latest
-      referencePolicy:
-        type: Source
 
 - apiVersion: v1
   kind: BuildConfig
@@ -64,41 +62,39 @@ objects:
       triggers:
         type: ImageChange
 
-#- apiVersion: v1
-#  kind: BuildConfig
-#  metadata:
-#    name: ${APP_NAME}-image
-#  spec:
-#    triggers: []
-#    failedBuildsHistoryLimit: 5
-#    output:
-#      to:
-#        kind: ImageStreamTag
-#        name: ${APP_NAME}:latest
-#    postCommit: {}
-#    resources: {}
-#    runPolicy: Serial
-#    source:
-#      dockerfile: |-
-#        FROM codecentric/springboot-maven3-centos
-#        ENV APP_TARGET=target
-#        ENV JAVA_OPTS=
-#        COPY ./springboot-echo-service-0.0.1-SNAPSHOT.jar ./target/springboot-echo-service-0.0.1-SNAPSHOT.jar
-#        RUN CHMOD 777 ./target/springboot-echo-service-0.0.1-SNAPSHOT.jar
-#        CMD ["/usr/bin/java -jar target/springboot-echo-service-0.0.1-SNAPSHOT.jar"]
-#        EXPOSE 8080
-#      binary:
-#        asFile: springboot-echo-service.jar
-#      type: Docker
-#    strategy:
-##      env:
-##        - name: APP_TARGET
-##          value: target
-#      dockerStrategy:
-#        from:
-#          kind: ImageStreamTag
-#          name: springboot-maven3-centos:latest
-#      type: Docker
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: ${APP_NAME}-image
+  spec:
+    triggers: []
+    failedBuildsHistoryLimit: 5
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${APP_NAME}:latest
+    postCommit: {}
+    resources: {}
+    runPolicy: Serial
+    source:
+      dockerfile: |-
+        FROM codecentric/springboot-maven3-centos
+        ENV APP_TARGET=target
+        ENV JAVA_OPTS=
+        COPY springboot-echo-service-0.0.1-SNAPSHOT.jar /deployments/springboot-echo-service-0.0.1-SNAPSHOT.jar
+        EXPOSE 8080 8778 9779
+      binary:
+        asFile: springboot-echo-service.jar
+      type: Docker
+    strategy:
+      #      env:
+      #        - name: APP_TARGET
+      #          value: target
+      dockerStrategy:
+        from:
+          kind: ImageStreamTag
+          name: springboot-base-image:latest
+      type: Docker
 #- apiVersion: v1
 #  kind: DeploymentConfig
 #  metadata:

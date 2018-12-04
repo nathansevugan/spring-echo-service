@@ -39,21 +39,19 @@ pipeline {
             }
         }
 
-//        stage('Build App') {
-//            steps {
-//                echo "building application"
-//                sh "mvn install"
-//                stash name: "jar", includes: "target/springboot-echo-service-0.0.1-SNAPSHOT.jar"
-//            }
-//        }
+        stage('Build App') {
+            steps {
+                echo "building application"
+                sh "mvn install"
+                stash name: "jar", includes: "target/springboot-echo-service-0.0.1-SNAPSHOT.jar"
+            }
+        }
         stage('Build image') {
             steps {
-//                unstash name: "jar"
-//                sh "ls target"
+                unstash name: "jar"
+                sh "ls target"
                 script {
-//                    sh "oc start-build bc/${rcImageName}-image --from-file=target/springboot-echo-service-0.0.1-SNAPSHOT.jar -n ${projectId} --wait --follow"
-//                    sh "oc start-build bc/${rcImageName}-image --from-file=target/springboot-echo-service-0.0.1-SNAPSHOT.jar -n ${projectId} --wait --follow"
-                      sh "oc new-app codecentric/springboot-maven3-centos~https://github.com/nathansevugan/springboot-echo-service.git"
+                    sh "oc start-build bc/${rcImageName}-image --from-file=target/springboot-echo-service-0.0.1-SNAPSHOT.jar -n ${projectId} --wait --follow"
                 }
             }
         }
