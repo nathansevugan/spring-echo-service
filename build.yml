@@ -84,7 +84,8 @@ objects:
         ENV APP_TARGET=target
         ENV JAVA_OPTS=
         COPY ./springboot-echo-service-0.0.1-SNAPSHOT.jar ./target/springboot-echo-service-0.0.1-SNAPSHOT.jar
-        CMD ["java -jar target/springboot-echo-service-0.0.1-SNAPSHOT.jar"]
+#        ENTRYPOINT ["/usr/bin/java"]
+        CMD ["/usr/bin/java -jar target/springboot-echo-service-0.0.1-SNAPSHOT.jar"]
         EXPOSE 8080
       binary:
         asFile: springboot-echo-service.jar
