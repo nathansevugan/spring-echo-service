@@ -81,7 +81,7 @@ objects:
     source:
       dockerfile: |-
         FROM codecentric/springboot-maven3-centos
-        COPY ./springboot-echo-service-0.0.1-SNAPSHOT.jar ./springboot-echo-service-0.0.1-SNAPSHOT.jar
+        COPY ./springboot-echo-service-0.0.1-SNAPSHOT.jar ./target/springboot-echo-service-0.0.1-SNAPSHOT.jar
         EXPOSE 8080
       binary:
         asFile: springboot-echo-service.jar
@@ -95,6 +95,68 @@ objects:
           kind: ImageStreamTag
           name: springboot-maven3-centos:latest
       type: Docker
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: springboot-echo-service
+    name: springboot-echo-service
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      app: springboot-echo-service
+      deploymentconfig: springboot-echo-service
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        creationTimestamp: null
+        labels:
+          app: springboot-echo-service
+          deploymentconfig: springboot-echo-service
+      spec:
+        containers:
+        - image: springboot-echo-service:latest
+          imagePullPolicy: Always
+          name: springboot-echo-service
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - springboot-echo-service
+        from:
+          kind: ImageStreamTag
+          name: springboot-echo-service:latest
+          namespace: dev
+      type: ImageChange
+
+
+
+
 
 #- apiVersion: v1
 #  kind: DeploymentConfig

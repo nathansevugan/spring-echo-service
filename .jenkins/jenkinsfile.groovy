@@ -20,33 +20,11 @@ pipeline {
         stage('Info') {
             steps {
                 script {
-                    //Global variable section
-                    //project that holds images
                     projectId = "dev"
-
-                    //Staging reposiroty credentials [aprm cicd]
-//                    repositoryCredentials = "HmVFwNO3:etaWeJoi/639yLO7RnBOrHs6Miy1ihX2joLNl0IOd5rX"
-//
-//                    shortCommit = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
-//                    branch = scm.branches[0].name
-//                    buildNumber = env.getEnvironment().get("BUILD_NUMBER")
-//                    repoName = sh(script: 'git remote -v|grep \'(fetch)\'|awk \'{print $2}\' | gawk \'match($0, /([^/]+).git$/, ary) {print ary[1]}\'', returnStdout: true).trim()
-
-//                    muleVersion = "4.3.2.1"
-//                    imageSuffix = muleVersion //branch
-
                     baseImageName = ("springboot-echo-service").toLowerCase()
                     rcImageName = "${baseImageName}"
-                    //-rc-${shortCommit}-${buildNumber}
-
-
                     echo("building base image:" + baseImageName)
-
                     echo "ENV"
-//                    environment = env.getEnvironment()
-//                            .collect { envvar -> "${envvar.key}=${envvar.value}" }.join("\n")
-//                    echo environment
-
                 }
             }
         }
@@ -75,27 +53,14 @@ pipeline {
                 script {
                     sh "oc start-build bc/${rcImageName}-image --from-file=target/springboot-echo-service-0.0.1-SNAPSHOT.jar -n ${projectId} --wait --follow"
                 }
-//                sh script: "oc start-build bc/${imageName}-image --wait --follow"
-//                script {
-//                    createImageBuild(rcImageName, buildNumber)
-//                    runImageBuild(rcImageName)
-//                }
             }
         }
     }
 }
 
-def runImageBuild(def imageName) {
-    sh script: "oc start-build bc/${imageName}-image --wait --follow"
-}
-
-//def createImageBuild() {
-//    sh script: "set +x; oc process -f build.yml" + " | oc create -f -"
-//}
 
 def ocStartSession() {
     println("Requesting OC session")
-//    def sessionToken = sh script: "set +x; oc sa get-token nate -n cicd", returnStdout: true
     echo("getting session token")
     def sessionToken = sh script: "set +x; oc sa get-token robot -n dev", returnStdout: true
     echo("attempting to login to the service using the session token: " + sessionToken)
