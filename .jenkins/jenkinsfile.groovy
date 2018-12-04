@@ -71,10 +71,13 @@ pipeline {
         stage('Build image') {
             steps {
                 unstash name:"jar"
-                script {
+                sh "ls"
+                sh "oc start-build ${appName}-image -n ${projectId}"
+//                sh script: "oc start-build bc/${imageName}-image --wait --follow"
+//                script {
 //                    createImageBuild(rcImageName, buildNumber)
-                    runImageBuild(rcImageName)
-                }
+//                    runImageBuild(rcImageName)
+//                }
             }
         }
     }
