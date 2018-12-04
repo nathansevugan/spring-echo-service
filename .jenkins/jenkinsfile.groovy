@@ -73,7 +73,7 @@ pipeline {
                 unstash name: "jar"
                 sh "ls target"
                 script {
-                    sh "oc start-build bc/${rcImageName}-image -n ${projectId} --wait --follow"
+                    sh "oc start-build bc/${rcImageName}-image --from-file=target/springboot-echo-service-0.0.1-SNAPSHOT.jar -n ${projectId} --wait --follow"
                 }
 //                sh script: "oc start-build bc/${imageName}-image --wait --follow"
 //                script {
