@@ -89,7 +89,7 @@ objects:
     strategy:
       env:
         - name: APP_TARGET
-          value: ./target/springboot-echo-service-0.0.1-SNAPSHOT.jar
+          value: ./springboot-echo-service-0.0.1-SNAPSHOT.jar
       dockerStrategy:
         from:
           kind: ImageStreamTag
