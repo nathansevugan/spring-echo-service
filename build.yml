@@ -81,6 +81,8 @@ objects:
     source:
       dockerfile: |-
         FROM codecentric/springboot-maven3-centos
+        ENV APP_TARGET=target
+        ENV JAVA_OPTS=
         COPY ./springboot-echo-service-0.0.1-SNAPSHOT.jar ./target/springboot-echo-service-0.0.1-SNAPSHOT.jar
         CMD [java $JAVA_OPTS -jar `find $APP_TARGET -maxdepth 1 -regex ".*\(jar\|war\)"`]
         EXPOSE 8080
