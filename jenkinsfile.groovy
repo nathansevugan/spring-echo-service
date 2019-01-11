@@ -9,7 +9,7 @@ pipeline {
     timeout(time: 2, unit: 'MINUTES')
   }
   stages {
-    stage('Build App') {
+    stage('Building Springboot echo application') {
       steps {
         echo "building application"
         sh "mvn install"
